@@ -1,0 +1,148 @@
+units:
+  kx: 6.2
+  ky: 6.2
+  px: kx + 4.5
+  py: ky + 4.5
+  pp: 0.5px # pcb padding
+  pm: pp+0.5 # pcb margin
+  pw: pm+2 # case walls
+points:
+  zones:
+    matrix:
+      key:
+        padding: 1px
+        spread: 1px
+      columns:
+        outer:
+        pinky:
+        ring:
+          key:
+            spread: 18
+        middle:
+          key:
+            spread: 18
+        index:
+          key:
+            spread: 18
+        inner:
+        innerer:
+          rows.bottom.skip: true
+          rows.home.skip: true
+          rows.top.skip: true
+      rows:
+        mod:
+        bottom:
+        home:
+        top:
+        number:
+outlines:
+  raw:
+    - what: rectangle
+      where: true
+      size: [kx, ky]
+  keys:
+    - what: rectangle
+      where: true
+      size: [kx-0.5,ky-0.5]
+  keys_holes:
+    - what: rectangle
+      where: true
+      size: [kx+1.5,ky+1.5]
+      fillet: 1.5
+  pole_mounts_holes:
+    - what: circle
+      where: /matrix_(pinky|inner)_(number|bottom)/
+      adjust.shift: [px/2,-py/2]
+      radius: 0.65 # screws are M1.6, but holes should be smaller
+  pole_mounts:
+    - what: circle
+      where: /matrix_(pinky|index)_(number|bottom)/
+      adjust.shift: [px/2,-py/2]
+      radius: 1.5
+    - operation: subtract
+      name: pole_mounts_holes
+  board:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: matrix_outer_number
+          shift: [-pp,pp]
+        - ref: matrix_innerer_number
+          shift: [pp,pp]
+        - ref: matrix_innerer_mod
+          shift: [pp,-pp]
+        - ref: matrix_outer_mod
+          shift: [-pp,-pp]
+      fillet: 3
+  board_margin:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: matrix_outer_number
+          shift: [-pm,pm]
+        - ref: matrix_innerer_number
+          shift: [pm,pm]
+        - ref: matrix_innerer_mod
+          shift: [pm,-pm]
+        - ref: matrix_outer_mod
+          shift: [-pm,-pm]
+      fillet: 3
+  board_walls:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: matrix_outer_number
+          shift: [-pw,pw]
+        - ref: matrix_innerer_number
+          shift: [pw,pw]
+        - ref: matrix_innerer_mod
+          shift: [pw,-pw]
+        - ref: matrix_outer_mod
+          shift: [-pw,-pw]
+      fillet: 3
+  # Combination preview showing outline and keys.
+  pcb_combo:
+    - name: board
+    - operation: subtract
+      name: keys
+  case_combo:
+    - name: board
+    - operation: subtract
+      name: keys_holes
+  board_margin_combo:
+    - name: board_margin
+    - operation: subtract
+      name: board
+  board_walls_combo:
+    - name: board_walls
+    - operation: subtract
+      name: board_margin
+  complete_combo:
+    - name: board_walls_combo
+    - operation: add
+      name: case_combo
+    - operation: subtract
+      name: pole_mounts
+  
+pcbs:
+  main:
+    outlines:
+      main:
+        outline: raw
+    footprints:
+      choc:
+        what: omron
+        where: true
+        params:
+          from: "{{column_net}}"
+          to: "{{colrow}}"
+
+      diode:
+        what: diode
+        where: true
+        params:
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [0, -5]
+
