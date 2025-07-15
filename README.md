@@ -19,6 +19,7 @@ Like a helix, but smaller, and light enough to float
 - [ ] Run ergogen with
   - footprint for switches
   - footprint for controllers
+  - fixed spacing on the switches (12mm horizontal, 18mm between fingers, 13mm vertical)
 - [ ] fun graphics
 
 # Thanks
