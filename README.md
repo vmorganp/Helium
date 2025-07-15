@@ -1,6 +1,6 @@
 # Helium
 
-Like a helix, but smaller, light enough to float away
+Like a helix, but smaller, and light enough to float
 
 # Parts
 
@@ -20,3 +20,6 @@ Like a helix, but smaller, light enough to float away
   - footprint for switches
   - footprint for controllers
 - [ ] fun graphics
+
+# Thanks
+Inspiration - ChrisChrisLoLo 's various projects
